@@ -1,0 +1,21 @@
+class OurClass inherits OurSecondClass:
+    public function publicFunc(a : int) returns bool:
+        var i = 10;
+        while(a < 1000) begin
+            if(a == i) begin
+                return true;
+            end
+            else begin
+                a++;
+            end
+        end
+        return false;
+    end
+end
+entry class OurSecondClass:
+    public function main() returns int:
+        var res = "hello" + name;
+        print(res);
+        return 0;
+    end
+end
