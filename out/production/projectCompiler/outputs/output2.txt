@@ -1,0 +1,20 @@
+start program{
+	main class: Sample1{
+		class method: main/ return type=int/ access modifier=public{
+			var: array_size
+			var: array
+			var: i
+			var: val
+		}
+	}
+	class: BinarySearch/ class parent: (main) {
+		field: data/ type=int[]/ access modifier=private
+		class method: doSearch/ return type=int/ access modifier=private{
+			var: middle
+			var: foundVal
+		}
+		class method: find/ return type=string/ access modifier=public{
+			var: value1
+		}
+	}
+}

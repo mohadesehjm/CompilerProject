@@ -1,0 +1,9 @@
+program start{ [program body]
+}
+main class: [class name]{
+}
+class: [class name](/ class parent: ([parent name]))?{
+[class body] }
+field: [field name]/ type=[type]/ access modifier=[access modifier] var: [var name]
+class method: [method name]/ return type=[return type]/ access modifier=[access modifier]{
+[method body] }

@@ -6,14 +6,70 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+
 public class Program implements MoolaListener {
+    Scope currentScope;
+    Class currentClass;
+    ArrayList<String> classes;
+
     @Override
     public void enterProgram(MoolaParser.ProgramContext ctx) {
+        classes = new ArrayList<>();
+        currentScope = new Scope(null, "program", ctx.start.getLine());
+        currentScope.setChildren(new ArrayList<Scope>());
 
+    }
+
+    public String printTree(Scope scope){
+        StringBuilder result = new StringBuilder();
+        result.append(scope.getSymbolTable().toString()).append("\n");
+        for (int i =0; i<scope.getChildren().size(); i++){
+            Scope child = scope.getChildren().get(i);
+            result.append(printTree(child));
+        }
+        return result.toString();
+    }
+
+    public void setDefined(Scope scope){
+        SymbolTable st = scope.getSymbolTable();
+        HashMap<String , SymbolTableItem> members = st.getMembers();
+        for (Map.Entry<String,SymbolTableItem > entry : members.entrySet()) {
+            if(entry.getKey().startsWith("var_")){
+                SymbolTableItem sti = entry.getValue();
+                Type type = sti.getType();
+                String name = type.getName();
+                if(name.endsWith("[]")){
+                    name = name.substring(0, name.length() - 2);
+                }
+                if(classes.contains(name)){
+                    type.setDefined(true);
+                }
+            }
+        }
+        for(int i = 0; i<scope.getChildren().size(); i++){
+            Scope child = scope.getChildren().get(i);
+            setDefined(child);
+        }
     }
 
     @Override
     public void exitProgram(MoolaParser.ProgramContext ctx) {
+        setDefined(currentScope);
+        try {
+            FileWriter myWriter = new FileWriter("src/outputs/output1.txt");
+            myWriter.write(printTree(currentScope));
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException var3) {
+            System.out.println("An error occurred.");
+            var3.printStackTrace();
+        }
 
     }
 

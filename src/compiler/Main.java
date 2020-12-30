@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        CharStream stream = CharStreams.fromFileName("inputs/test.mla");
+        CharStream stream = CharStreams.fromFileName("src/inputs/test.mla");
         MoolaLexer lexer = new MoolaLexer(stream);
         TokenStream tokens = new CommonTokenStream(lexer);
         MoolaParser parser = new MoolaParser(tokens);
@@ -24,6 +24,6 @@ public class Main {
         ParseTree tree = parser.program();
         ParseTreeWalker walker = new ParseTreeWalker();
         MoolaListener listener = new Program();
-        walker.walk(listener,tree);
+        walker.walk(listener, tree);
     }
 }
