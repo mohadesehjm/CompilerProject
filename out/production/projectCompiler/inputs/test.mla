@@ -1,6 +1,7 @@
 entry class Sample1 :
     function main() returns int :
         var array_size = 10;
+        var array_size = 10;
         var array = new int[ array_size ];
         var i = 0;
         if( i ) begin
@@ -12,6 +13,8 @@ entry class Sample1 :
                 array[ i ] = 1;
                 continue;
             end
+            else
+                array[i] = 2;
             array[ i ] = i + 1;
             i++;
         end
@@ -21,20 +24,28 @@ entry class Sample1 :
             val = new BinarySearch().doSearch( 0 , array.length - 1 );
         end
         return false;
+        var i = 0;
     end
 end
 
 
 class BinarySearch inherits main:
     private field data int[];
-
-    private function doSearch( value : int , _begin : int , _end : int ) returns int:
+    public field data int[];
+ //   String name;
+    private function doSearch( value : int , _begin : int , _end : int , pass_class : the_class) returns class1:
         var middle = ( _begin + _end ) / 2;
+        var Hello_105 = new BinarySearch();
         var foundVal = doSearch( value , _begin , middle );
         if( !foundVal )
             foundVal = doSearch( value , middle + 1 , _end );
         return foundVal + new BinarySearch().data.length;
     end
+    public function doSearch( value : int , _begin : int , _end : int ) returns int:
+        var middle = ( _begin + _end ) / 2;
+
+    end
+
 
     public function find( value : int ) returns string:
         var value1 = _doSearch( value , 0 , _data.length - 1 ).toString();
@@ -42,4 +53,14 @@ class BinarySearch inherits main:
     end
 
 
+end
+class BinarySearch inherits main:
+
+end
+
+class Hexa :
+    public function search() returns void:
+       // var val = new BinarySearch().doSearch( 1 , 0 , array.length - 1 );
+        val = new BinarySearch().doSearch( 0 , array.length - 1 );
+    end
 end

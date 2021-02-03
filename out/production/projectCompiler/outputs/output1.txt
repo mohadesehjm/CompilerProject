@@ -1,3 +1,62 @@
 -------------  program : 1  -------------
+Key = class_Hexa  | Value = class = ( name : Hexa )
+Key = mainClass_Sample1  | Value = class = ( name : Sample1 )
+Key = class_BinarySearch  | Value = class = ( name : BinarySearch ) ( inherits : main )
+-----------------------------------------
+
+-------------  Sample1 : 1  -------------
+Key = method_main  | Value = method = ( name : main ) ( accessmodifier : PUBLIC ) ( returntype : INT )
+-----------------------------------------
+
+-------------  main : 2  -------------
+Key = var_array_size_4_8  | Value = ( name : array_size_4_8 ) ( assign: 10 )
+Key = var_i_27_8  | Value = ( name : i_27_8 ) ( assign: 0 )
+Key = var_array_size  | Value = ( name : array_size ) ( assign: 10 )
+Key = var_i  | Value = ( name : i ) ( assign: 0 )
+-----------------------------------------
+
+-------------  if : 7  -------------
+-----------------------------------------
+
+-------------  while : 11  -------------
+-----------------------------------------
+
+-------------  else : 12  -------------
+-----------------------------------------
+
+-------------  while : 22  -------------
+-----------------------------------------
+
+-------------  BinarySearch : 32  -------------
+Key = field_data  | Value = Field: (name: data) (type: INT[]) (accessModifier: PUBLIC)
+Key = method_doSearch_44_20  | Value = method = ( name : doSearch_44_20 ) ( accessmodifier : PUBLIC ) ( returntype : INT ) ( parameterstype : [INT,_end][INT,_begin][INT,value] )
+Key = method_find  | Value = method = ( name : find ) ( accessmodifier : PUBLIC ) ( returntype : STRING ) ( parameterstype : [INT,value] )
+Key = method_doSearch  | Value = method = ( name : doSearch ) ( accessmodifier : PRIVATE ) ( returntype : CLASS ) ( parameterstype : [INT,_end][INT,_begin][INT,value][INT,pass_class] )
+-----------------------------------------
+
+-------------  doSearch : 36  -------------
+Key = var_foundVal  | Value = ( name : foundVal ) ( assign: doSearch(value,_begin,middle) )
+Key = var_middle  | Value = ( name : middle ) ( assign: (_begin+_end)/2 )
+-----------------------------------------
+
+-------------  if : 40  -------------
+-----------------------------------------
+
+-------------  doSearch_44_20 : 44  -------------
+Key = var_middle  | Value = ( name : middle ) ( assign: (_begin+_end)/2 )
+-----------------------------------------
+
+-------------  find : 50  -------------
+Key = var_value1  | Value = ( name : value1 ) ( assign: _doSearch(value,0,_data.length-1).toString() )
+-----------------------------------------
+
+-------------  BinarySearch_57_6 : 57  -------------
+-----------------------------------------
+
+-------------  Hexa : 61  -------------
+Key = method_search  | Value = method = ( name : search ) ( accessmodifier : PUBLIC ) ( returntype : CLASS )
+-----------------------------------------
+
+-------------  search : 62  -------------
 -----------------------------------------
 

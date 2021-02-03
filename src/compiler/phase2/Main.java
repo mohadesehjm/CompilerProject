@@ -1,4 +1,4 @@
-package compiler;
+package compiler.phase2;
 
 import gen.MoolaLexer;
 import gen.MoolaListener;

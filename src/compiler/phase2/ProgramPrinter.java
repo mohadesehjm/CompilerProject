@@ -1,4 +1,4 @@
-package compiler;
+package compiler.phase2;
 
 import gen.MoolaListener;
 import gen.MoolaParser;
@@ -9,93 +9,97 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-
-public class Program implements MoolaListener {
-    Scope currentScope;
-    Class currentClass;
-    ArrayList<String> classes;
+public class ProgramPrinter implements MoolaListener {
+    String program = "";
+    int tab = 0;
+    int entry = 0;
 
     @Override
     public void enterProgram(MoolaParser.ProgramContext ctx) {
-        classes = new ArrayList<>();
-        currentScope = new Scope(null, "program", ctx.start.getLine());
-        currentScope.setChildren(new ArrayList<Scope>());
+        program += "start program{\n";
+        tab ++;
 
-    }
-
-    public String printTree(Scope scope){
-        StringBuilder result = new StringBuilder();
-        result.append(scope.getSymbolTable().toString()).append("\n");
-        for (int i =0; i<scope.getChildren().size(); i++){
-            Scope child = scope.getChildren().get(i);
-            result.append(printTree(child));
-        }
-        return result.toString();
-    }
-
-    public void setDefined(Scope scope){
-        SymbolTable st = scope.getSymbolTable();
-        HashMap<String , SymbolTableItem> members = st.getMembers();
-        for (Map.Entry<String,SymbolTableItem > entry : members.entrySet()) {
-            if(entry.getKey().startsWith("var_")){
-                SymbolTableItem sti = entry.getValue();
-                Type type = sti.getType();
-                String name = type.getName();
-                if(name.endsWith("[]")){
-                    name = name.substring(0, name.length() - 2);
-                }
-                if(classes.contains(name)){
-                    type.setDefined(true);
-                }
-            }
-        }
-        for(int i = 0; i<scope.getChildren().size(); i++){
-            Scope child = scope.getChildren().get(i);
-            setDefined(child);
-        }
     }
 
     @Override
     public void exitProgram(MoolaParser.ProgramContext ctx) {
-        setDefined(currentScope);
+        program += "}\n";
         try {
-            FileWriter myWriter = new FileWriter("src/outputs/output1.txt");
-            myWriter.write(printTree(currentScope));
+            FileWriter myWriter = new FileWriter("src/outputs/output2.txt");
+            myWriter.write(program);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
-        } catch (IOException var3) {
+        } catch (IOException e) {
             System.out.println("An error occurred.");
-            var3.printStackTrace();
+            e.printStackTrace();
         }
 
     }
 
     @Override
     public void enterClassDeclaration(MoolaParser.ClassDeclarationContext ctx) {
-
+        if(entry == 0) {
+            for (int i = 0; i < tab; i++) {
+                program += "\t";
+            }
+            program += "class: " + ctx.ID(0);
+            if(ctx.classParent != null){
+                program += "/ class parent: ("
+                        + ctx.classParent.toString().split("='")[1].split("'")[0]
+                        + ")";
+            }
+            program += " {\n";
+            tab++;
+//        // TODO Implement this!
+        }
     }
 
     @Override
     public void exitClassDeclaration(MoolaParser.ClassDeclarationContext ctx) {
-
+        if(entry == 0) {
+            for (int i = 0; i < tab - 1; i++) {
+                program += "\t";
+            }
+            program += "}\n";
+            tab--;
+            // TODO Implement this!
+        }
     }
 
     @Override
     public void enterEntryClassDeclaration(MoolaParser.EntryClassDeclarationContext ctx) {
-
+        entry = 1;
+        for (int i=0; i<tab; i++){
+            program += "\t";
+        }
+        program += "main class: " + ctx.classDeclaration().className.toString().split("='")[1].split("',")[0] + "{\n";
+        tab ++;
+        // TODO Implement this!
     }
 
     @Override
     public void exitEntryClassDeclaration(MoolaParser.EntryClassDeclarationContext ctx) {
-
+        entry = 0;
+        for (int i=0; i<tab-1; i++){
+            program += "\t";
+        }
+        program += "}\n";
+        tab --;
     }
 
     @Override
     public void enterFieldDeclaration(MoolaParser.FieldDeclarationContext ctx) {
-
+        for (int i=0; i<tab; i++){
+            program += "\t";
+        }
+        program += "field: " + ctx.fieldName.getText() + "/ type=" + ctx.fieldType.getText() + "/ access modifier=";
+        if (ctx.fieldAccessModifier != null){
+            program += ctx.fieldAccessModifier.getText();
+        }
+        else {
+            program += "public";
+        }
+        program += "\n";
     }
 
     @Override
@@ -115,12 +119,34 @@ public class Program implements MoolaListener {
 
     @Override
     public void enterMethodDeclaration(MoolaParser.MethodDeclarationContext ctx) {
-
+        String AccMod = "";
+        for (int i=0; i<tab; i++){
+            program += "\t";
+        }
+        if(ctx.getText().split("function")[0].contains("private")){
+            AccMod = "private";
+        }
+        else{
+            AccMod = "public";
+        }
+        if(entry == 1){
+            AccMod = "public";
+        }
+        program += "class method: " + ctx.methodName.getText()
+                + "/ return type=" + ctx.getText().split("returns")[1].split(":")[0]
+                + "/ access modifier=" + AccMod+ "{\n";
+        tab ++;
+        // TODO Implement this!
     }
 
     @Override
     public void exitMethodDeclaration(MoolaParser.MethodDeclarationContext ctx) {
-
+        for (int i=0; i<tab-1; i++){
+            program += "\t";
+        }
+        program += "}\n";
+        tab --;
+        // TODO Implement this!
     }
 
     @Override
@@ -175,6 +201,11 @@ public class Program implements MoolaListener {
 
     @Override
     public void enterStatementVarDef(MoolaParser.StatementVarDefContext ctx) {
+
+        for (int i=0; i<tab; i++){
+            program += "\t";
+        }
+        program += ctx.children.toArray()[0].toString() + ": " + ctx.children.toArray()[1].toString() + "\n";
 
     }
 
@@ -455,6 +486,7 @@ public class Program implements MoolaListener {
 
     @Override
     public void enterMoolaType(MoolaParser.MoolaTypeContext ctx) {
+
 
     }
 
